@@ -1,9 +1,16 @@
 package com.watsonLiang;
 
+import org.apache.commons.codec.binary.Hex;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 public class DBConnector {
+    public enum LoginState {success, usernameNotExist, passwordMismatch, unknownError};
     /**
      * Connect to a sample database
      */
@@ -37,8 +44,8 @@ public class DBConnector {
             ResultSet rs = stmt.executeQuery(query);
             ArrayList<String[]> resList = new ArrayList<>();
             while(rs.next()){
-                String[] rowData = new String[DataModel.dataAttr.length];
-                for(int i = 0; i < DataModel.dataAttr.length; i++){
+                String[] rowData = new String[DataModel.dataAttrDisplay.length];
+                for(int i = 0; i < DataModel.dataAttrDisplay.length; i++){
                     switch(DataModel.dataType[i]){
                         case text:
                             rowData[i] = rs.getString(DataModel.dataAttr[i]);
@@ -61,10 +68,96 @@ public class DBConnector {
         return res;
     }
 
+    public void insert(String[] attrs){
+        String attrnames = "";
+        String vals = "";
+        for(int i = 0; i < attrs.length; i++){
+            if(attrs[i].length() == 0) continue;
+            attrnames += DataModel.dataAttr[i] + ",";
+            switch(DataModel.dataType[i]){
+                case text:
+                    vals += "'" + attrs[i] + "',";
+                    break;
+                case real:
+                case integer:
+                    vals += attrs[i] + ",";
+                    break;
+            }
+        }
+        attrnames += "regtime";
+        vals += "datetime()";
+        String sql = "INSERT INTO cards (" + attrnames + ") VALUES (" + vals + ");";
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(sql);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void update(String id, boolean toAdd, String value){
+        String flag = toAdd ? "+" : "-";
+        String sql = "UPDATE cards SET credit = credit " + flag+ " " + value + " WHERE id = " + id + ";";
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(sql);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public LoginState login(String username, String password){
+        String query = "SELECT passwordhash, salt FROM loginmsg WHERE username ='" + username + "';";
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if(!rs.next()) return LoginState.usernameNotExist;
+            byte[] passwordbytes = password.getBytes(StandardCharsets.UTF_8);
+            String passwordhash = rs.getString("passwordhash");
+            String salt = rs.getString("salt");
+            byte[] saltbytes = Hex.decodeHex(salt);
+            ByteBuffer bb = ByteBuffer.allocate(passwordbytes.length + saltbytes.length);
+            bb.put(passwordbytes);
+            bb.put(saltbytes);
+            byte[] psbytes = bb.array();
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(psbytes);
+            byte[] psdres = md.digest();
+            byte[] dbpsdres = Hex.decodeHex(passwordhash);
+            if(Arrays.compare(psdres, dbpsdres) == 0 ) return LoginState.success;
+            else return LoginState.passwordMismatch;
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return LoginState.unknownError;
+    }
+
+    public void changePassword(String username, String newpassword){
+        final int saltLength = 64;
+        byte[] newpasswordbytes = newpassword.getBytes(StandardCharsets.UTF_8);
+        Random rand = new Random();
+        byte[] newsaltbytes = new byte[saltLength];
+        rand.nextBytes(newsaltbytes);
+        String newsalt = new String(Hex.encodeHex(newsaltbytes));
+        ByteBuffer bb = ByteBuffer.allocate(newpasswordbytes.length + newsaltbytes.length);
+        bb.put(newpasswordbytes);
+        bb.put(newsaltbytes);
+        byte[] newpasssaltbytes = bb.array();
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(newpasssaltbytes);
+            String newhashhex = new String(Hex.encodeHex(md.digest()));
+            String sql = "UPDATE loginmsg SET salt = '" + newsalt + "', passwordhash = '" + newhashhex
+                    + "' WHERE username = '" + username + "';";
+            Statement stmt = conn.createStatement();
+            stmt.execute(sql);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void connect() {
         try {
-            // db parameters
-            // create a connection to the database
             conn = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite has been established.");
         } catch (SQLException e) {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.RegController">
+   <children>
+      <FlowPane fx:id="attrListPane" />
+      <FlowPane>
+         <children>
+            <Button fx:id="regButton" mnemonicParsing="false" onMouseClicked="#regButtonHandler" text="注册" />
+         </children>
+      </FlowPane>
+   </children>
+</FlowPane>
