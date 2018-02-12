@@ -52,7 +52,6 @@ public class LoginController {
                 case usernameNotExist:
                     Main.logMessage("用户不存在");
                     break;
-
         }
     }
 }

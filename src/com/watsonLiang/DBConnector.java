@@ -64,6 +64,12 @@ public class DBConnector {
             resList.toArray(res);
         }catch(SQLException e){
             System.out.println(e.getMessage());
+        }finally{
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
         return res;
     }
@@ -88,10 +94,17 @@ public class DBConnector {
         vals += "datetime()";
         String sql = "INSERT INTO cards (" + attrnames + ") VALUES (" + vals + ");";
         try {
+            conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         }catch(SQLException e){
             e.printStackTrace();
+        }finally{
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -99,16 +112,24 @@ public class DBConnector {
         String flag = toAdd ? "+" : "-";
         String sql = "UPDATE cards SET credit = credit " + flag+ " " + value + " WHERE id = " + id + ";";
         try {
+            conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         }catch(SQLException e){
             e.printStackTrace();
+        }finally{
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
     public LoginState login(String username, String password){
         String query = "SELECT passwordhash, salt FROM loginmsg WHERE username ='" + username + "';";
         try {
+            conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             if(!rs.next()) return LoginState.usernameNotExist;
@@ -128,6 +149,12 @@ public class DBConnector {
             else return LoginState.passwordMismatch;
         }catch(Exception e) {
             e.printStackTrace();
+        }finally{
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
         return LoginState.unknownError;
     }
@@ -149,10 +176,18 @@ public class DBConnector {
             String newhashhex = new String(Hex.encodeHex(md.digest()));
             String sql = "UPDATE loginmsg SET salt = '" + newsalt + "', passwordhash = '" + newhashhex
                     + "' WHERE username = '" + username + "';";
+
+            conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         }catch(Exception e){
             e.printStackTrace();
+        }finally{
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -162,6 +197,12 @@ public class DBConnector {
             System.out.println("Connection to SQLite has been established.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }finally{
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 }
