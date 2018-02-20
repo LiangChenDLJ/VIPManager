@@ -15,9 +15,10 @@
                </opaqueInsets>
             </TextField>
             <ChoiceBox fx:id="searchChoiceBox" prefWidth="150.0" />
-            <Button fx:id="searchButton" mnemonicParsing="false" onMouseClicked="#searchButtonHandler" text="查询" />
-            <Button fx:id="regButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onMouseClicked="#regButtonHandler" text="新卡注册" />
-            <Button fx:id="changepassButton" mnemonicParsing="false" onMouseClicked="#changepassButtonHandler" text="修改密码" />
+            <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonHandler" text="查询" />
+            <Button fx:id="regButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#regButtonHandler" text="新卡注册" />
+            <Button fx:id="changepassButton" mnemonicParsing="false" onAction="#changepassButtonHandler" text="修改密码" />
+            <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonHandler" text="积分历史" />
          </children>
       </FlowPane>
    </top>
@@ -36,7 +37,7 @@
       <FlowPane prefHeight="33.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="creditInput" />
-            <Button fx:id="creditButton" mnemonicParsing="false" onMouseClicked="#creditButtonHandler" text="积分" />
+            <Button fx:id="creditButton" mnemonicParsing="false" onAction="#creditButtonHandler" text="积分" />
          </children>
       </FlowPane>
    </bottom>

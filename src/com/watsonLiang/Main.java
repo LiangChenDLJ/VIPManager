@@ -27,7 +27,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static void logMessage(String log){
+    public static void displayMessage(String log){
         System.out.println("Log : " + log);
     }
 }

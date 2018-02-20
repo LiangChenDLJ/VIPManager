@@ -44,8 +44,8 @@ public class DBConnector {
             ResultSet rs = stmt.executeQuery(query);
             ArrayList<String[]> resList = new ArrayList<>();
             while(rs.next()){
-                String[] rowData = new String[DataModel.dataAttrDisplay.length];
-                for(int i = 0; i < DataModel.dataAttrDisplay.length; i++){
+                String[] rowData = new String[DataModel.dataAttr.length];
+                for(int i = 0; i < DataModel.dataAttr.length; i++){
                     switch(DataModel.dataType[i]){
                         case text:
                             rowData[i] = rs.getString(DataModel.dataAttr[i]);
@@ -55,6 +55,51 @@ public class DBConnector {
                             break;
                         case integer:
                             rowData[i] = Integer.toString(rs.getInt(DataModel.dataAttr[i]));
+                            break;
+                    }
+                }
+                resList.add(rowData);
+            }
+            res = new String[resList.size()][];
+            resList.toArray(res);
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }finally{
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        return res;
+    }
+
+    public String[][] queryHistory(String id) {
+        int i;
+        String[][] res = {};
+        String query = "SELECT ";
+        for(i = 0; i < DataModel.historyAttrDisplay.length; i++){
+            if(i > 0) query += ", ";
+            query += DataModel.historyAttr[i];
+        }
+        query += " FROM transhistory WHERE id = " + id + " ;";
+        try {
+            conn = DriverManager.getConnection(url);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            ArrayList<String[]> resList = new ArrayList<>();
+            while(rs.next()){
+                String[] rowData = new String[DataModel.historyAttrDisplay.length];
+                for(i = 0; i < DataModel.historyAttrDisplay.length; i++){
+                    switch(DataModel.historyDataType[i]){
+                        case text:
+                            rowData[i] = rs.getString(DataModel.historyAttr[i]);
+                            break;
+                        case real:
+                            rowData[i] = Float.toString(rs.getFloat(DataModel.historyAttr[i]));
+                            break;
+                        case integer:
+                            rowData[i] = Integer.toString(rs.getInt(DataModel.historyAttr[i]));
                             break;
                     }
                 }

@@ -11,7 +11,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class RegController {
+public class RegController extends MsgControllerPrototype {
     @FXML
     Button regButton;
 
@@ -33,14 +33,25 @@ public class RegController {
     };
 
     @FXML
-    void regButtonHandler(MouseEvent e){
+    void regButtonHandler(){
         String[] attrs = new String[DataModel.searchAttrDisplay.length];
-        for(int i = 0; i < DataModel.searchAttrDisplay.length; i++){
+        int i;
+        for(i = 0; i < DataModel.searchAttrDisplay.length; i++){
             attrs[i] = attrInputs[i].getText();
         }
-        Main.dbconn.insert(attrs);
-        Stage stage = (Stage) regButton.getScene().getWindow();
-        stage.close();
+        boolean[] formatCheck = DataModel.formatCheck(DataModel.searchAttr, attrs);
+        String errormsg = "";
+        for(i = 0; i < formatCheck.length; i++){
+            if(!formatCheck[i])
+                errormsg += DataModel.searchAttrDisplay[i] + " 不能为 \"" + attrs[i] + "\" | ";
+        }
+        if(errormsg.length() == 0){
+            Main.dbconn.insert(attrs);
+            Stage stage = (Stage) regButton.getScene().getWindow();
+            stage.close();
+        }else{
+            displayMessage("格式错误：" + errormsg);
+        }
     }
 
 }

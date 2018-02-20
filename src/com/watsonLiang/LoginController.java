@@ -7,12 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.security.MessageDigest;
-
-public class LoginController {
+public class LoginController  extends MsgControllerPrototype {
     @FXML
     TextField usernameInput;
 
@@ -46,12 +43,12 @@ public class LoginController {
                     e.printStackTrace();
                 }
                 break;
-                case passwordMismatch:
-                    Main.logMessage("登录密码有误");
-                    break;
-                case usernameNotExist:
-                    Main.logMessage("用户不存在");
-                    break;
+            case passwordMismatch:
+                Main.displayMessage("登录密码有误");
+                break;
+            case usernameNotExist:
+                Main.displayMessage("用户不存在");
+                break;
         }
     }
 }

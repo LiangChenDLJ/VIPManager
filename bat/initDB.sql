@@ -28,8 +28,8 @@ create table loginmsg(
 );
 /*
 	default user: admin
-	default pass: admin
-	default salt: defaultsalt;
+	default pass: admin (binary result)
+	default salt: defaultsalt (ascii to binary);
 */
 insert into loginmsg(username, passwordhash, salt)
 	values("admin", "59cf25ae45a72ecd360ad5cf0bb722670b35ad59c7969632c10e05b9f010dd32", "64656661756c7473616c74");

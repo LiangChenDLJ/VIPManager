@@ -9,30 +9,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.scene.input.ScrollEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.util.HashMap;
-
-class CardRecord {
-    HashMap<String, String> attrs;
-    public CardRecord(String[] dataAttrs, String[] dataVals){
-        attrs = new HashMap<>();
-        for(int i = 0; i < dataAttrs.length; i++){
-            attrs.put(dataAttrs[i], dataVals[i]);
-        }
-    }
-};
-
-
-
-public class MainController {
+public class MainController extends MsgControllerPrototype {
     @FXML
     Button regButton;
 
@@ -46,7 +29,7 @@ public class MainController {
     Button changepassButton;
 
     @FXML
-    TableView<CardRecord> searchTable;
+    TableView<ItemRecord> searchTable;
 
     @FXML
     TextField searchInput;
@@ -58,15 +41,18 @@ public class MainController {
     TextField creditInput;
 
     @FXML
+    Button historyButton;
+
+    @FXML
     public void initialize(){
         searchChoiceBox.setValue(DataModel.dataAttrDisplay[0]);
         searchChoiceBox.setItems(FXCollections.observableArrayList(DataModel.searchAttrDisplay));
 
         SortedList sortedList = new SortedList(FXCollections.observableArrayList());
         for(int i = 0; i< DataModel.dataAttrDisplay.length; i++){
-            TableColumn<CardRecord, String> newColumn = new TableColumn<>(DataModel.dataAttrDisplay[i]);
-            newColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<CardRecord, String>, ObservableValue<String>>() {
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<CardRecord, String> p) {
+            TableColumn<ItemRecord, String> newColumn = new TableColumn<>(DataModel.dataAttrDisplay[i]);
+            newColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ItemRecord, String>, ObservableValue<String>>() {
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<ItemRecord, String> p) {
                     return new ReadOnlyObjectWrapper<>(p.getValue().attrs.get(p.getTableColumn().getText()));
                 }});
             searchTable.getColumns().add(newColumn);
@@ -75,11 +61,11 @@ public class MainController {
     }
 
     private void updateTableView(String[][] data){
-        ObservableList<CardRecord> ol = FXCollections.observableArrayList();
+        ObservableList<ItemRecord> ol = FXCollections.observableArrayList();
         for(String[] attrs : data){
-            ol.addAll(new CardRecord(DataModel.dataAttrDisplay, attrs));
+            ol.addAll(new ItemRecord(DataModel.dataAttrDisplay, attrs));
         }
-        SortedList<CardRecord> sl = new SortedList<>(ol);
+        SortedList<ItemRecord> sl = new SortedList<>(ol);
         sl.comparatorProperty().bind(searchTable.comparatorProperty());
         searchTable.setItems(sl);
     }
@@ -109,12 +95,12 @@ public class MainController {
     }
 
     @FXML
-    void searchButtonHandler(MouseEvent e){
+    void searchButtonHandler(){
         doSearch(searchChoiceBox.getValue(), searchInput.getText());
     }
 
     @FXML
-    void regButtonHandler(MouseEvent e){
+    void regButtonHandler(){
         Stage regStage = new Stage();
         try {
             Parent regroot = FXMLLoader.load(getClass().getResource("/view/reg.fxml"));
@@ -129,14 +115,14 @@ public class MainController {
     }
 
     @FXML
-    void creditButtonHandler(MouseEvent e){
+    void creditButtonHandler(){
         String id = searchTable.getSelectionModel().getSelectedItem().attrs.get("ID");
         Main.dbconn.update(id, true, creditInput.getText());
         creditInput.setText("");
     }
 
     @FXML
-    void changepassButtonHandler(MouseEvent e){
+    void changepassButtonHandler(){
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/changepass.fxml"));
             Stage changepassStage = new Stage();
@@ -144,6 +130,30 @@ public class MainController {
             changepassStage.setScene(new Scene(root));
             changepassStage.initModality(Modality.APPLICATION_MODAL);
             changepassStage.show();
+        }catch(Exception exc){
+            exc.printStackTrace();
+        }
+    }
+
+    @FXML
+    void historyButtonHandler(){
+        TableView.TableViewSelectionModel<ItemRecord> selectionmodel = searchTable.getSelectionModel();
+        if(selectionmodel.isEmpty()){
+            displayMessage("错误：未选择会员卡");
+            return;
+        }
+        ItemRecord cr = selectionmodel.getSelectedItem();
+        String id = cr.attrs.get("ID");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/history.fxml"));
+            HistoryController controller = new HistoryController(id);
+            loader.setController(controller);
+            Parent root = loader.load();
+            Stage historyStage = new Stage();
+            historyStage.setTitle("积分历史");
+            historyStage.setScene(new Scene(root));
+            historyStage.initModality(Modality.APPLICATION_MODAL);
+            historyStage.show();
         }catch(Exception exc){
             exc.printStackTrace();
         }

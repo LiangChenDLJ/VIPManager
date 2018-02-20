@@ -5,8 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.changepassController">
+<FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.ChangepassController">
    <children>
       <FlowPane>
          <children>
@@ -26,6 +25,6 @@
             <PasswordField fx:id="newpassConfirmInput" />
          </children>
       </FlowPane>
-      <Button fx:id="changeButton" mnemonicParsing="false" onMouseClicked="#changeButtonHandler" text="确认修改" />
+      <Button fx:id="changeButton" mnemonicParsing="false" onAction="#changeButtonHandler" text="确认修改" />
    </children>
 </FlowPane>

@@ -18,6 +18,6 @@
             <PasswordField fx:id="passwordInput" />
          </children>
       </FlowPane>
-      <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#loginButtonHandler" text="登录" />
+      <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonHandler" text="登录" />
    </children>
 </FlowPane>

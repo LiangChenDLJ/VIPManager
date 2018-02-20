@@ -1,5 +1,7 @@
 package com.watsonLiang;
 
+import java.util.ArrayList;
+
 public class DataModel {
     public enum AttributeType{integer, real, text};
 
@@ -19,10 +21,32 @@ public class DataModel {
 
     public static AttributeType[] dataType = {AttributeType.integer, AttributeType.text, AttributeType.text, AttributeType.text, AttributeType.real, AttributeType.text};
     public static String[] searchAttrDisplay = {"ID", "姓名", "身份证", "手机号"};
+    public static String[] searchAttr = {"ID", "name", "idcard", "phone"};
     public static String[] dataAttr = {"ID", "name", "idcard", "phone", "credit", "regtime"};
     public static String[] dataAttrDisplay = {"ID", "姓名", "身份证", "手机号", "积分"};
+    public static String[] historyHeadAttrDisplay = {"ID", "姓名", "身份证", "手机号", "积分", "注册时间"};
+
+    public static AttributeType[] historyDataType = {AttributeType.text, AttributeType.real};
     public static String[] historyAttrDisplay = {"时间", "积分变动"};
     public static String[] historyAttr = {"time", "creditchange"};
 
+
+    public static boolean[] formatCheck(String[] attrs, String[] vals){
+        boolean[] res = new boolean[attrs.length];
+        for(int i = 0; i < attrs.length; i++){
+            switch(dataType[attrIndex(attrs[i])]){
+                case text:
+                    res[i] = true;
+                    break;
+                case real:
+                    res[i] = vals[i].matches("[0-9]*(/.[0-9]+)?");
+                    break;
+                case integer:
+                    res[i] = vals[i].matches("[0-9]*");
+                    break;
+            }
+        }
+        return res;
+    }
 
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -8,7 +9,7 @@
       <FlowPane fx:id="attrListPane" />
       <FlowPane>
          <children>
-            <Button fx:id="regButton" mnemonicParsing="false" onMouseClicked="#regButtonHandler" text="注册" />
+            <Button fx:id="regButton" mnemonicParsing="false" onAction="#regButtonHandler" text="注册" />
          </children>
       </FlowPane>
    </children>
