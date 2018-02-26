@@ -15,7 +15,7 @@ public class DBConnector {
      * Connect to a sample database
      */
     DBConnector(String url){
-        this.url = "jdbc:sqlite:" + url;
+        this.url = url;
         connect();
     }
 
@@ -119,7 +119,7 @@ public class DBConnector {
         return res;
     }
 
-    public void insert(String[] attrs){
+    public void insert(String[] attrs) throws SQLException{
         String attrnames = "";
         String vals = "";
         for(int i = 0; i < attrs.length; i++){
@@ -138,6 +138,23 @@ public class DBConnector {
         attrnames += "regtime";
         vals += "datetime()";
         String sql = "INSERT INTO cards (" + attrnames + ") VALUES (" + vals + ");";
+        try {
+            conn = DriverManager.getConnection(url);
+            Statement stmt = conn.createStatement();
+            stmt.execute(sql);
+        }catch(Exception e){
+            throw e;
+        }finally{
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    public void delete(String id){
+        String sql = "DELETE FROM cards WHERE id = " + id + ";";
         try {
             conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
@@ -190,8 +207,13 @@ public class DBConnector {
             md.update(psbytes);
             byte[] psdres = md.digest();
             byte[] dbpsdres = Hex.decodeHex(passwordhash);
-            if(Arrays.compare(psdres, dbpsdres) == 0 ) return LoginState.success;
-            else return LoginState.passwordMismatch;
+            if(psdres.length == dbpsdres.length) {
+                for (int i = 0; i < psdres.length; i++) {
+                    if (psdres[i] != dbpsdres[i]) return LoginState.passwordMismatch;
+                }
+                return LoginState.success;
+            }
+            return LoginState.passwordMismatch;
         }catch(Exception e) {
             e.printStackTrace();
         }finally{

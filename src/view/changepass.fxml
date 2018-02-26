@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.ChangepassController">
+<VBox alignment="CENTER" prefWidth="200.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.ChangepassController">
    <children>
-      <FlowPane>
+      <GridPane alignment="CENTER" hgap="5.0" vgap="5.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.0" minWidth="10.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="10.0" prefWidth="101.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="旧密码" />
-            <PasswordField fx:id="oldpassInput" />
+            <PasswordField fx:id="oldpassInput" GridPane.columnIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="新密码" GridPane.rowIndex="1" />
+            <PasswordField fx:id="newpassInput" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="确认新密码" GridPane.rowIndex="2" />
+            <PasswordField fx:id="newpassConfirmInput" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
-      </FlowPane>
-      <FlowPane>
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="新密码" />
-            <PasswordField fx:id="newpassInput" />
-         </children>
-      </FlowPane>
-      <FlowPane>
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="确认新密码" />
-            <PasswordField fx:id="newpassConfirmInput" />
-         </children>
-      </FlowPane>
-      <Button fx:id="changeButton" mnemonicParsing="false" onAction="#changeButtonHandler" text="确认修改" />
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </GridPane>
+      <Button fx:id="changeButton" mnemonicParsing="false" onAction="#changeButtonHandler" prefWidth="70.0" text="确认" />
+      <TextField fx:id="msgTextField" disable="true" editable="false" prefHeight="25.0" prefWidth="236.0" />
    </children>
-</FlowPane>
+</VBox>

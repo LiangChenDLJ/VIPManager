@@ -6,7 +6,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class ChangepassController {
+public class ChangepassController extends MsgControllerPrototype{
     @FXML
     PasswordField oldpassInput;
 
@@ -27,13 +27,13 @@ public class ChangepassController {
     @FXML
     void changeButtonHandler(){
         String newpass = newpassInput.getText();
-        if(newpass.compareTo(newpassInput.getText()) != 0){
-            Main.displayMessage("新密码前后不一致");
+        if(newpass.compareTo(newpassConfirmInput.getText()) != 0){
+            displayMessage("新密码前后不一致");
             return;
         }
         DBConnector.LoginState loginState = Main.dbconn.login(Main.username, oldpassInput.getText());
         if(loginState != DBConnector.LoginState.success){
-            Main.displayMessage("旧密码认证失败");
+            displayMessage("旧密码认证失败");
             return;
         }
         Main.dbconn.changePassword(Main.username, newpass);

@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.RegController">
+<VBox alignment="CENTER" prefWidth="200.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.RegController">
    <children>
-      <FlowPane fx:id="attrListPane" />
-      <FlowPane>
-         <children>
-            <Button fx:id="regButton" mnemonicParsing="false" onAction="#regButtonHandler" text="注册" />
-         </children>
-      </FlowPane>
+      <GridPane fx:id="attrListPane" hgap="5.0" vgap="5.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.0" minWidth="10.0" prefWidth="59.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="141.0" minWidth="10.0" prefWidth="141.0" />
+        </columnConstraints>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </GridPane>
+      <Button fx:id="regButton" mnemonicParsing="false" onAction="#regButtonHandler" text="注册" />
+      <TextField fx:id="msgTextField" disable="true" editable="false" />
    </children>
-</FlowPane>
+</VBox>

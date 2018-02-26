@@ -3,14 +3,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    public static Stage regStage;
     public static Stage loginStage;
     public static Stage mainStage;
-    public static Stage changepassStage;
     public static DBConnector dbconn;
     public static String username;
     @Override
@@ -20,14 +17,11 @@ public class Main extends Application {
         primaryStage.setTitle("登录");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+        primaryStage.setResizable(false);
     }
 
     public static void main(String[] args) {
-        dbconn = new DBConnector("src/data/VIPManager.db");
+        dbconn = new DBConnector("jdbc:sqlite:data/VIPManager.db");
         launch(args);
-    }
-
-    public static void displayMessage(String log){
-        System.out.println("Log : " + log);
     }
 }

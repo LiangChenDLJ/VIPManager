@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class LoginController  extends MsgControllerPrototype {
+
     @FXML
     TextField usernameInput;
 
@@ -18,11 +19,6 @@ public class LoginController  extends MsgControllerPrototype {
 
     @FXML
     Button loginButton;
-
-    @FXML
-    public void initialize(){
-
-    }
 
     @FXML
     void loginButtonHandler(){
@@ -36,7 +32,8 @@ public class LoginController  extends MsgControllerPrototype {
                     Parent root = FXMLLoader.load(getClass().getResource("/view/main.fxml"));
                     Main.mainStage = new Stage();
                     Main.mainStage.setTitle("会员卡管理系统");
-                    Main.mainStage.setScene(new Scene(root, 1000, 500));
+                    Main.mainStage.setScene(new Scene(root));
+                    Main.mainStage.setResizable(true);
                     Main.mainStage.show();
                     Main.loginStage.close();
                 }catch(Exception e){
@@ -44,10 +41,10 @@ public class LoginController  extends MsgControllerPrototype {
                 }
                 break;
             case passwordMismatch:
-                Main.displayMessage("登录密码有误");
+                displayMessage("登录密码有误");
                 break;
             case usernameNotExist:
-                Main.displayMessage("用户不存在");
+                displayMessage("用户不存在");
                 break;
         }
     }

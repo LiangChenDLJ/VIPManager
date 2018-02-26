@@ -6,12 +6,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.text.Text;
 import javafx.util.Callback;
+
+import java.util.Comparator;
 
 public class HistoryController extends MsgControllerPrototype {
     @FXML
@@ -28,9 +28,17 @@ public class HistoryController extends MsgControllerPrototype {
 
     @FXML
     public void initialize(){
-        SortedList sortedList = new SortedList(FXCollections.observableArrayList());
+        headTable.setPlaceholder(new Label(""));
         for(int i = 0; i< DataModel.historyHeadAttrDisplay.length; i++){
             TableColumn<ItemRecord, String> newColumn = new TableColumn<>(DataModel.historyHeadAttrDisplay[i]);
+            switch(DataModel.dataType[i]){
+                case real:
+                    newColumn.setComparator(Comparator.comparingDouble(s->Double.valueOf(s)));
+                    break;
+                case integer:
+                    newColumn.setComparator(Comparator.comparingInt(s->Integer.valueOf(s)));
+                    break;
+            }
             newColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ItemRecord, String>, ObservableValue<String>>() {
                 public ObservableValue<String> call(TableColumn.CellDataFeatures<ItemRecord, String> p) {
                     return new ReadOnlyObjectWrapper<>(p.getValue().attrs.get(p.getTableColumn().getText()));
@@ -38,9 +46,17 @@ public class HistoryController extends MsgControllerPrototype {
             headTable.getColumns().add(newColumn);
         }
 
-        sortedList = new SortedList(FXCollections.observableArrayList());
+        historyTable.setPlaceholder(new Label(""));
         for(int i = 0; i< DataModel.historyAttrDisplay.length; i++){
             TableColumn<ItemRecord, String> newColumn = new TableColumn<>(DataModel.historyAttrDisplay[i]);
+            switch(DataModel.dataType[i]){
+                case real:
+                    newColumn.setComparator(Comparator.comparingDouble(s->Double.valueOf(s)));
+                    break;
+                case integer:
+                    newColumn.setComparator(Comparator.comparingInt(s->Integer.valueOf(s)));
+                    break;
+            }
             newColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ItemRecord, String>, ObservableValue<String>>() {
                 public ObservableValue<String> call(TableColumn.CellDataFeatures<ItemRecord, String> p) {
                     return new ReadOnlyObjectWrapper<>(p.getValue().attrs.get(p.getTableColumn().getText()));
@@ -67,7 +83,7 @@ public class HistoryController extends MsgControllerPrototype {
             sl.comparatorProperty().bind(historyTable.comparatorProperty());
             historyTable.setItems(sl);
         }catch(Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e);
         }
     }
 }

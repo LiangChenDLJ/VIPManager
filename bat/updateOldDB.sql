@@ -1,14 +1,8 @@
 /*
-	create a sqlite3 database named VIPManager.db,
+	open the old database named VIPManager.db,
 	then feed it with this script
 */
-create table cards(
-	ID int primary key not null, 
-	name text not null, 
-	idcard text, 
-	phone text, 
-	credit real default 0, 
-	regtime text);
+alter table cards add column regtime text;
 
 create table transhistory(
 	ID int not null, 

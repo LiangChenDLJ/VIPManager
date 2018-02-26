@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.LoginController">
+<VBox alignment="CENTER" prefWidth="200.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.watsonLiang.LoginController">
    <children>
-      <FlowPane>
+      <GridPane hgap="5.0" prefWidth="230.0" vgap="5.0">
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="用户名" />
-            <TextField fx:id="usernameInput" />
-         </children></FlowPane>
-      <FlowPane>
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="密码" />
-            <PasswordField fx:id="passwordInput" />
+            <TextField fx:id="usernameInput" GridPane.columnIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="密码" GridPane.rowIndex="1" />
+            <PasswordField fx:id="passwordInput" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
-      </FlowPane>
-      <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonHandler" text="登录" />
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </GridPane>
+      <Button fx:id="loginButton" alignment="CENTER" mnemonicParsing="false" onAction="#loginButtonHandler" prefWidth="70.0" text="登录" />
+      <TextField fx:id="msgTextField" disable="true" editable="false" />
    </children>
-</FlowPane>
+</VBox>

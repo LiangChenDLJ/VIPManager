@@ -11,4 +11,7 @@
    <top>
       <TableView fx:id="headTable" prefHeight="80.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </top>
+   <bottom>
+      <TextField fx:id="msgTextField" disable="true" editable="false" BorderPane.alignment="CENTER" />
+   </bottom>
 </BorderPane>

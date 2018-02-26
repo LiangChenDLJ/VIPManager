@@ -34,19 +34,18 @@ public class DataModel {
     public static boolean[] formatCheck(String[] attrs, String[] vals){
         boolean[] res = new boolean[attrs.length];
         for(int i = 0; i < attrs.length; i++){
-            switch(dataType[attrIndex(attrs[i])]){
-                case text:
-                    res[i] = true;
-                    break;
-                case real:
-                    res[i] = vals[i].matches("[0-9]*(/.[0-9]+)?");
-                    break;
-                case integer:
-                    res[i] = vals[i].matches("[0-9]*");
-                    break;
-            }
+            res[i] = formatCheck(attrs[i], vals[i]);
         }
         return res;
+    }
+
+    public static boolean formatCheck(String attr, String val){
+        switch(dataType[attrIndex(attr)]){
+            case text: return true;
+            case real: return val.matches("[\\+-]?[0-9]*(\\.[0-9]+)?");
+            case integer: return val.matches("[0-9]*");
+        }
+        return false;
     }
 
 }
