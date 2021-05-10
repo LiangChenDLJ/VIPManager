@@ -75,47 +75,6 @@ public class MainController {
         cardsVisualTable = new CardsVisualTable(cardsTableView);
     }
 
-    @FXML
-    void inputEnterHandler(KeyEvent e){
-        int i;
-        switch(e.getCode()){
-            case ENTER:
-                searchCards();
-                break;
-            case UP:
-                /*
-                i = DataModel.displayIndex(searchChoiceBox.getValue());
-                i = (i + DataModel.searchAttrDisplay.length - 1) % DataModel.searchAttrDisplay.length;
-                searchChoiceBox.setValue(DataModel.searchAttrDisplay[i]);
-                */
-                break;
-            case DOWN:
-                /*
-                i = DataModel.displayIndex(searchChoiceBox.getValue());
-                i = (i+1) % DataModel.searchAttrDisplay.length;
-                searchChoiceBox.setValue(DataModel.searchAttrDisplay[i]);
-                */
-                break;
-
-        }
-    }
-
-    @FXML
-    void inputScrollHandler(ScrollEvent e){
-        /*
-        int i;
-        if(e.getDeltaY() > 0){
-            i = DataModel.displayIndex(searchChoiceBox.getValue());
-            i = (i+1) % DataModel.searchAttrDisplay.length;
-        }else{
-            i = DataModel.displayIndex(searchChoiceBox.getValue());
-            i = (i + DataModel.searchAttrDisplay.length - 1) % DataModel.searchAttrDisplay.length;
-        }
-        searchChoiceBox.setValue(DataModel.searchAttrDisplay[i]);
-        */
-        return;
-    }
-
     void searchCards(){
         String searchValue = searchInput.getText();
         final String likePhrase = "%" + searchValue + "%";
@@ -191,42 +150,30 @@ public class MainController {
     void changePasswordButtonHandler() {
         try {
             stageManager.showChangePasswordStage();
-        }catch(IOException e){
-            messageDisplayer.displayMessage("[内部错误]启动注册界面失败", e);
+        } catch(IOException e){
+            messageDisplayer.displayMessage("[内部错误] 启动注册界面失败", e);
         }
     }
 
     @FXML
     void historyButtonHandler(){
-        /*
-        TableView.TableViewSelectionModel<ItemRecord> selectionmodel = searchTable.getSelectionModel();
-        if(selectionmodel.isEmpty()){
-            displayMessage("错误：未选择会员卡");
+        Optional<CardsRecord> selectedCard = cardsVisualTable.getSelectedItem();
+        if (selectedCard.isEmpty()) {
+            messageDisplayer.displayMessage("错误：未选择会员卡");
             return;
         }
-        ItemRecord cr = selectionmodel.getSelectedItem();
-        String id = cr.attrs.get("ID");
+        int cardId = selectedCard.get().getId();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/history.fxml"));
-            HistoryController controller = new HistoryController(id);
-            loader.setController(controller);
-            Parent root = loader.load();
-            Stage historyStage = new Stage();
-            historyStage.setTitle("积分历史");
-            historyStage.setScene(new Scene(root));
-            historyStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/logo.jpg")));
-            historyStage.initModality(Modality.APPLICATION_MODAL);
-            historyStage.show();
-        }catch(Exception exc){
-            exc.printStackTrace();
+            stageManager.showHistoryStage(cardId);
+        } catch(IOException e){
+            messageDisplayer.displayMessage("[内部错误] 启动积分历史界面失败", e);
         }
-        */
     }
 
     @FXML
     void deleteButtonHandler(){
         Optional<CardsRecord> cardsRecordOptional = cardsVisualTable.getSelectedItem();
-        if (!cardsRecordOptional.isPresent()) {
+        if (cardsRecordOptional.isEmpty()) {
             messageDisplayer.displayMessage("错误：未选择会员卡");
             return;
         }
@@ -239,6 +186,7 @@ public class MainController {
             int rowsUpdated = dslContext.deleteFrom(CARDS).where(CARDS.ID.eq(selectedCard.getId())).execute();
             assert(rowsUpdated == 1);
             messageDisplayer.displayMessage("删除成功");
+            searchCards();
         }
     }
 }

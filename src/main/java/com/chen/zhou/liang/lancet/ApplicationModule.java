@@ -12,7 +12,7 @@ public class ApplicationModule extends AbstractModule {
     Stage primaryStage;
 
     public ApplicationModule(Stage primaryStage) {
-       this.primaryStage = primaryStage;
+        this.primaryStage = primaryStage;
     }
 
     @Override

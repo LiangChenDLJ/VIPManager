@@ -4,8 +4,8 @@ import java.util.Comparator;
 import java.util.function.Function;
 
 public class FloatVisualColumn<S> extends VisualColumn<S, Float> {
-    public FloatVisualColumn(String columnDisplayName, Function<S, Float> valueFactory) {
-        super(columnDisplayName, valueFactory);
+    public FloatVisualColumn(String displayName, Function<S, Float> valueFactory) {
+        super(displayName, valueFactory);
     }
 
     @Override

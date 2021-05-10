@@ -4,8 +4,8 @@ import java.util.Comparator;
 import java.util.function.Function;
 
 public class IntegerVisualColumn<S> extends VisualColumn<S, Integer> {
-    public IntegerVisualColumn(String columnDisplayName, Function<S, Integer> valueFactory) {
-        super(columnDisplayName, valueFactory);
+    public IntegerVisualColumn(String displayName, Function<S, Integer> valueFactory) {
+        super(displayName, valueFactory);
     }
 
     @Override

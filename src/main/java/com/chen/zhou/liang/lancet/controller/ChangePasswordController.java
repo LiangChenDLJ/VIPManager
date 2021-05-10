@@ -27,14 +27,12 @@ public class ChangePasswordController {
     @FXML
     TextField messageTextField;
 
-    private final DSLContext dslContext;
     private final StageManager stageManager;
     private final MessageDisplayer messageDisplayer;
     private final Authenticator authenticator;
 
     @Inject
     public ChangePasswordController(DSLContext dslContext, StageManager stageManager, Authenticator authenticator) {
-        this.dslContext = dslContext;
         this.stageManager = stageManager;
         this.messageDisplayer = new MessageDisplayer();
         this.authenticator = authenticator;
@@ -55,8 +53,9 @@ public class ChangePasswordController {
             return;
         }
         try {
-            authenticator.authenticate(stageManager.getActiveUser(), oldPassword);
-            authenticator.updatePassword(stageManager.getActiveUser(), newPassword);
+            String activeUser = stageManager.getActiveUser().orElseThrow(()-> new DisplayableException("内部错误：当前用户为空"));
+            authenticator.authenticate(activeUser, oldPassword);
+            authenticator.updatePassword(activeUser, newPassword);
         } catch (DisplayableException e) {
             messageDisplayer.displayException(e);
             return;

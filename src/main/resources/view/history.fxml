@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <TableView fx:id="historyTable" prefHeight="399.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
-   </center>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chen.zhou.liang.lancet.controller.HistoryController">
    <top>
-      <TableView fx:id="headTable" prefHeight="80.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+      <TableView fx:id="cardInfoTableView" prefHeight="80.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </top>
+   <center>
+      <TableView fx:id="historyTableView" prefHeight="399.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+   </center>
    <bottom>
-      <TextField fx:id="msgTextField" disable="true" editable="false" BorderPane.alignment="CENTER" />
+      <TextField fx:id="messageTextField" disable="true" editable="false" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>

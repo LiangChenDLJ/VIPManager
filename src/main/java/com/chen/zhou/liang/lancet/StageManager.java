@@ -1,5 +1,7 @@
 package com.chen.zhou.liang.lancet;
 
+import com.chen.zhou.liang.lancet.controller.HistoryController;
+import com.chen.zhou.liang.lancet.controller.MainController;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import javafx.fxml.FXMLLoader;
@@ -12,11 +14,11 @@ import javafx.scene.image.Image;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 public class StageManager {
     private final Provider<FXMLLoader> fxmlLoaderProvider;
-    @Nullable
-    private String activeUser;
+    private Optional<String> activeUser;
 
     private final Stage primaryStage;
 
@@ -35,7 +37,7 @@ public class StageManager {
       this.primaryStage = primaryStage;
       this.activeStage = null;
       this.registerStage = null;
-      this.activeUser = null;
+      this.activeUser = Optional.empty();
     }
 
     public void showLoginStage() throws IOException {
@@ -50,7 +52,7 @@ public class StageManager {
     }
 
     public void showMainStage(String user) throws IOException {
-        this.activeUser = user;
+        this.activeUser = Optional.of(user);
         Parent root = fxmlLoaderProvider.get().load(getClass().getResourceAsStream("/view/main.fxml"));
         Stage mainStage = new Stage();
         mainStage.setTitle("会员卡管理系统-老桥头药品零售有限公司");
@@ -58,6 +60,21 @@ public class StageManager {
         mainStage.setResizable(true);
         setStageIcon(mainStage);
         activateAndSwitchStage(mainStage);
+
+    }
+
+    public void showHistoryStage(int cardId) throws IOException {
+        FXMLLoader fxmlLoader = fxmlLoaderProvider.get();
+        Parent root = fxmlLoader.load(getClass().getResourceAsStream("/view/history.fxml"));
+        HistoryController historyController = fxmlLoader.getController();
+        historyController.initialize(cardId);
+
+        Stage historyStage = new Stage();
+        historyStage.setTitle("积分历史");
+        historyStage.setScene(new Scene(root));
+        historyStage.initModality(Modality.APPLICATION_MODAL);
+        setStageIcon(historyStage);
+        historyStage.show();
     }
 
     public void showRegisterStage() throws IOException {
@@ -112,7 +129,8 @@ public class StageManager {
         }
         activeStage = newStage;
     }
-    public @Nullable String getActiveUser() {
+
+    public Optional<String> getActiveUser() {
         return activeUser;
     }
 }
