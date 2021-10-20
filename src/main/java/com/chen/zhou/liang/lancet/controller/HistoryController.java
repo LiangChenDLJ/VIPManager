@@ -53,10 +53,9 @@ public class HistoryController {
             cardInfoVisualTable.updateTableView(ImmutableList.of(card));
             Result<TranshistoryRecord> historyTransactions = dslContext.selectFrom(TRANSHISTORY).where(TRANSHISTORY.ID.eq(id)).fetch();
             historyVisualTable.updateTableView(ImmutableList.copyOf(historyTransactions));
-        } catch (Exception e){
+        } catch (Exception e) {
             messageDisplayer.displayMessage("读取会员积分历史失败.", e);
             return;
         }
-
     }
 }

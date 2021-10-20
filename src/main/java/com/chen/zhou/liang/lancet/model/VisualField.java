@@ -5,9 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
-import java.util.Comparator;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public abstract class VisualField<S, T> {
     private final String displayName;

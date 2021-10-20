@@ -1,6 +1,5 @@
 package com.chen.zhou.liang.lancet.model;
 
-import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.function.Function;
 

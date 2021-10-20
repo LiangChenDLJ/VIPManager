@@ -75,6 +75,13 @@ public class MainController {
         cardsVisualTable = new CardsVisualTable(cardsTableView);
     }
 
+    @FXML
+    void inputEnterHandler(KeyEvent e){
+        if (e.getCode() == KeyCode.ENTER) {
+            searchCards();
+        }
+    }
+
     void searchCards(){
         String searchValue = searchInput.getText();
         final String likePhrase = "%" + searchValue + "%";

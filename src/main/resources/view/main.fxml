@@ -13,7 +13,7 @@
    <top>
       <HBox spacing="5.0" style="-fx-background-color: grey;">
          <children>
-            <TextField fx:id="searchInput" alignment="TOP_LEFT" onKeyPressed="#inputEnterHandler" onScroll="#inputScrollHandler">
+            <TextField fx:id="searchInput" alignment="TOP_LEFT" onKeyPressed="#inputEnterHandler">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
