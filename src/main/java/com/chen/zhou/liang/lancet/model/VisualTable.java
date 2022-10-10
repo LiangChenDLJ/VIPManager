@@ -18,7 +18,7 @@ public abstract class VisualTable<S> {
                 .collect(ImmutableList.toImmutableList()));
     }
 
-    public void updateTableView(ImmutableList<S> items) {
+    public void updateTableView(ImmutableList<S> items)     {
         SortedList<S> sortedList = new SortedList<S>(FXCollections.observableList(items));
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.setItems(sortedList);

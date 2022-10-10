@@ -4,6 +4,7 @@ import com.chen.zhou.liang.lancet.StageManager;
 import com.chen.zhou.liang.lancet.model.CardsVisualTable;
 import com.chen.zhou.liang.lancet.storage.orm.tables.records.CardsRecord;
 import com.chen.zhou.liang.lancet.utils.MessageDisplayer;
+import com.chen.zhou.liang.lancet.utils.TimeUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
@@ -22,19 +23,20 @@ import org.jooq.DSLContext;
 import org.jooq.Result;
 
 import static com.chen.zhou.liang.lancet.storage.orm.Tables.CARDS;
+import static com.chen.zhou.liang.lancet.storage.orm.Tables.TRANSHISTORY;
 
 import java.io.IOException;
 import java.util.Optional;
 
 public class MainController {
     @FXML
-    Button regButton;
+    MenuItem registerCardMenuItem;
 
     @FXML
     Button searchButton;
 
     @FXML
-    Button changePasswordButton;
+    MenuItem changePasswordMenuItem;
 
     @FXML
     TableView<CardsRecord> cardsTableView;
@@ -47,6 +49,9 @@ public class MainController {
 
     @FXML
     TextField creditInput;
+
+    @FXML
+    TextField creditCommentInput;
 
     @FXML
     Button historyButton;
@@ -108,7 +113,7 @@ public class MainController {
     }
 
     @FXML
-    void regButtonHandler(){
+    void registerCardMenuItemHandler(){
         try {
             stageManager.showRegisterStage();
         } catch (IOException e) {
@@ -123,6 +128,7 @@ public class MainController {
             messageDisplayer.displayMessage("请输入积分");
             return;
         }
+
         float creditAmountToUpdate;
         try {
             creditAmountToUpdate = Float.parseFloat(creditTextInput);
@@ -132,20 +138,31 @@ public class MainController {
         }
 
         Optional<CardsRecord> cardsRecordOptional = cardsVisualTable.getSelectedItem();
-        if (!cardsRecordOptional.isPresent()) {
+        if (cardsRecordOptional.isEmpty()) {
            messageDisplayer.displayMessage("错误：未选择会员卡");
            return;
         }
-        CardsRecord cardsRecord = cardsRecordOptional.get();
-
+        int cardId = cardsRecordOptional.get().getId();
         int numberOfRowsUpdated = dslContext
                 .update(CARDS)
                 .set(CARDS.CREDIT, CARDS.CREDIT.plus(creditAmountToUpdate))
-                .where(CARDS.ID.eq(cardsRecord.getId()))
+                .where(CARDS.ID.eq(cardId))
                 .execute();
         assert(numberOfRowsUpdated == 1);
+
+        int numberOfHistoryRecordsInserted =
+        dslContext
+                .insertInto(TRANSHISTORY, TRANSHISTORY.ID, TRANSHISTORY.CREDITCHANGE, TRANSHISTORY.TIME, TRANSHISTORY.COMMENT)
+                .values(cardId, creditAmountToUpdate, TimeUtils.getCurrentTimeAsText(), creditCommentInput.getText())
+                .execute();
+        assert(numberOfHistoryRecordsInserted == 1);
+
         searchCards();
         messageDisplayer.displayMessage("积分成功");
+
+        // Clear the text to prevent duplicated button clicking
+        creditInput.setText("");
+        creditCommentInput.setText("");
     }
 
     @FXML
@@ -154,7 +171,7 @@ public class MainController {
     }
 
     @FXML
-    void changePasswordButtonHandler() {
+    void changePasswordMenuItemHandler() {
         try {
             stageManager.showChangePasswordStage();
         } catch(IOException e){
@@ -189,6 +206,7 @@ public class MainController {
         alert.setTitle("确认删除");
         alert.setContentText("确认删除会员卡吗？删除后无法恢复");
         Optional<ButtonType> confirmation = alert.showAndWait();
+        // The Transhistory table should really also be cleared, but we keep them for now in case we want to check the history of deleted cards.
         if (confirmation.isPresent() && (confirmation.get() == ButtonType.OK)) {
             int rowsUpdated = dslContext.deleteFrom(CARDS).where(CARDS.ID.eq(selectedCard.getId())).execute();
             assert(rowsUpdated == 1);

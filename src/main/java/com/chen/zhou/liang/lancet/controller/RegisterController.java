@@ -5,6 +5,7 @@ import com.chen.zhou.liang.lancet.model.CardsRegisterPane;
 import com.chen.zhou.liang.lancet.storage.orm.tables.records.CardsRecord;
 import com.chen.zhou.liang.lancet.utils.DisplayableException;
 import com.chen.zhou.liang.lancet.utils.MessageDisplayer;
+import com.chen.zhou.liang.lancet.utils.TimeUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -61,6 +62,7 @@ public class RegisterController {
             messageDisplayer.displayMessage(e.getMessage());
             return;
         }
+        cardsRecord.setRegtime(TimeUtils.getCurrentTimeAsText());
         try {
             cardsRecord.store();
         }catch (RuntimeException re) {
@@ -75,6 +77,6 @@ public class RegisterController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("确认删除");
         alert.setContentText("确认删除会员卡吗？删除后无法恢复");
-        Optional<ButtonType> confirmation = alert.showAndWait();
+        alert.showAndWait();
     }
 }

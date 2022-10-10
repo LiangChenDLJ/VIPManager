@@ -11,7 +11,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -26,7 +26,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Transhistory extends TableImpl<TranshistoryRecord> {
 
-    private static final long serialVersionUID = -1119399364;
+    private static final long serialVersionUID = 992553534;
 
     /**
      * The reference instance of <code>transhistory</code>
@@ -55,6 +55,11 @@ public class Transhistory extends TableImpl<TranshistoryRecord> {
      * The column <code>transhistory.time</code>.
      */
     public final TableField<TranshistoryRecord, String> TIME = createField(DSL.name("time"), org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>transhistory.comment</code>.
+     */
+    public final TableField<TranshistoryRecord, String> COMMENT = createField(DSL.name("comment"), org.jooq.impl.SQLDataType.CLOB, this, "");
 
     /**
      * Create a <code>transhistory</code> table reference
@@ -121,11 +126,11 @@ public class Transhistory extends TableImpl<TranshistoryRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<Integer, Float, String> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<Integer, Float, String, String> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

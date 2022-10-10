@@ -1,32 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chen.zhou.liang.lancet.controller.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chen.zhou.liang.lancet.controller.MainController">
    <top>
-      <HBox spacing="5.0" style="-fx-background-color: grey;">
+      <VBox spacing="5.0" style="-fx-background-color: grey;">
          <children>
-            <TextField fx:id="searchInput" alignment="TOP_LEFT" onKeyPressed="#inputEnterHandler">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </TextField>
-            <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonHandler" text="查询" />
-            <Pane HBox.hgrow="ALWAYS" />
-            <Button fx:id="regButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#regButtonHandler" text="新卡注册" />
-            <Button fx:id="changePasswordButton" mnemonicParsing="false" onAction="#changePasswordButtonHandler" text="修改密码" />
+            <MenuBar>
+              <menus>
+                  <Menu mnemonicParsing="false" text="会员卡">
+                     <items>
+                        <MenuItem fx:id="registerCardMenuItem" mnemonicParsing="false" onAction="#registerCardMenuItemHandler" text="注册会员卡" />
+                     </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="管理员">
+                  <items>
+                    <MenuItem fx:id="changePasswordMenuItem" mnemonicParsing="false" onAction="#changePasswordMenuItemHandler" text="修改密码" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox>
+               <children>
+                  <TextField fx:id="searchInput" alignment="TOP_LEFT" onKeyPressed="#inputEnterHandler">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonHandler" text="查询" />
+                   <Pane HBox.hgrow="ALWAYS" />
+                  <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonHandler" prefWidth="100.0" text="显示积分历史" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteButtonHandler" prefWidth="100.0" text="删除会员卡" />
+               </children>
+               <padding>
+                  <Insets left="2.0" right="2.0" />
+               </padding>
+            </HBox>
          </children>
          <padding>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+            <Insets bottom="3.0" />
          </padding>
-      </HBox>
+      </VBox>
    </top>
    <center>
        <TableView fx:id="cardsTableView" editable="true" BorderPane.alignment="CENTER">
@@ -38,21 +54,37 @@
    <bottom>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <HBox spacing="5.0">
-               <children>
-                  <TextField fx:id="creditInput" onKeyPressed="#creditEnterHandler" />
-                  <Button fx:id="creditButton" mnemonicParsing="false" onAction="#creditButtonHandler" text="积分" />
-                  <Pane HBox.hgrow="ALWAYS" />
-                  <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonHandler" prefWidth="100.0" text="显示积分历史" />
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteButtonHandler" prefWidth="100.0" text="删除会员卡" />
-               </children>
+            <BorderPane>
+               <left>
+                  <HBox BorderPane.alignment="CENTER">
+                     <children>
+                         <Label alignment="CENTER" contentDisplay="CENTER" text="积分" textAlignment="CENTER" />
+                         <TextField fx:id="creditInput" onKeyPressed="#creditEnterHandler" />
+                     </children>
+                      <padding>
+                          <Insets right="10.0" />
+                      </padding>
+                  </HBox>
+               </left>
+                <center>
+                    <BorderPane BorderPane.alignment="CENTER">
+                        <left>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="备注" textAlignment="CENTER" />
+                        </left>
+                        <center>
+                        <TextField fx:id="creditCommentInput" onKeyPressed="#creditEnterHandler" />
+                        </center>
+                        <padding>
+                            <Insets right="20.0" />
+                        </padding>
+                    </BorderPane>
+                </center>
+               <right>
+                  <Button fx:id="creditButton" mnemonicParsing="false" onAction="#creditButtonHandler" text="积分" BorderPane.alignment="CENTER" />
+               </right>
                <padding>
-                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </HBox>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding></BorderPane>
             <TextField fx:id="messageTextField" disable="true" editable="false" />
          </children>
       </VBox>

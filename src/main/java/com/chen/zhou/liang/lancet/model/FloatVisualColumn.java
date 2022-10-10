@@ -10,7 +10,7 @@ public class FloatVisualColumn<S> extends VisualColumn<S, Float> {
 
     @Override
     public String convert(Float rawValue) {
-        return rawValue.toString();
+        return  String.format("%.2f", rawValue);
     }
 
     @Override

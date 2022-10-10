@@ -8,6 +8,7 @@ public class HistoryVisualTable extends VisualTable<TranshistoryRecord> {
     public HistoryVisualTable(TableView<TranshistoryRecord> tableView) {
         super(tableView, ImmutableList.of(
                 new StringVisualColumn<>("时间", TranshistoryRecord::getTime),
-                new FloatVisualColumn<>("积分变动", TranshistoryRecord::getCreditchange)));
+                new FloatVisualColumn<>("积分变动", TranshistoryRecord::getCreditchange),
+                new StringVisualColumn<>("备注", TranshistoryRecord::getComment)));
     }
 }
