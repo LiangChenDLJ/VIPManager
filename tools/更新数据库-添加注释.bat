@@ -1,0 +1,1 @@
+sqlite3.exe ..\data\VIPManager.db < update_history_with_comment.sql
