@@ -14,6 +14,7 @@ public class LancetApplication extends Application {
         Injector injector = Guice.createInjector(new ApplicationModule(primaryStage));
         StageManager stageManager = injector.getInstance(StageManager.class);
         stageManager.showLoginStage();
+
     }
 
     public static void main(String[] args) {

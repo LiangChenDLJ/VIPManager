@@ -6,19 +6,20 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 
+import java.util.List;
 import java.util.Optional;
 
 public abstract class VisualTable<S> {
     protected final TableView<S> tableView;
 
-    public VisualTable(TableView<S> tableView, ImmutableList<VisualColumn<S, ?>> visualColumns) {
+    public VisualTable(TableView<S> tableView, List<VisualColumn<S, ?>> visualColumns) {
         this.tableView = tableView;
         tableView.setPlaceholder(new Label(""));
         tableView.getColumns().addAll(visualColumns.stream().map(VisualColumn::getTableColumn)
                 .collect(ImmutableList.toImmutableList()));
     }
 
-    public void updateTableView(ImmutableList<S> items)     {
+    public void updateTableView(List<S> items)     {
         SortedList<S> sortedList = new SortedList<S>(FXCollections.observableList(items));
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.setItems(sortedList);

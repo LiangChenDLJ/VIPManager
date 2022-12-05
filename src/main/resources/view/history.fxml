@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.chen.zhou.liang.lancet.model.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chen.zhou.liang.lancet.controller.HistoryController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chen.zhou.liang.lancet.controller.HistoryController">
    <top>
-      <TableView fx:id="cardInfoTableView" prefHeight="80.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+      <VBox spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox spacing="5.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="交易时间" textAlignment="CENTER" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="从" textAlignment="CENTER" />
+                  <DatePicker fx:id="queryDateRangeStart" onAction="#startDateStartHandler" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="到" textAlignment="CENTER" />
+                  <DatePicker fx:id="queryDateRangeEnd" onAction="#endDateStartHandler" />
+               </children>
+               <padding>
+                  <Insets left="2.0" right="2.0" />
+               </padding>
+            </HBox>
+            <HBox spacing="5.0">
+               <children>
+                  <TextField fx:id="searchInput" alignment="TOP_LEFT">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonHandler" text="查询" />
+                  <Pane HBox.hgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets left="2.0" right="2.0" />
+               </padding>
+            </HBox>
+            <TableView fx:id="cardInfoTableView" prefHeight="80.0" prefWidth="600.0" />
+         </children>
+      </VBox>
    </top>
    <center>
       <TableView fx:id="historyTableView" prefHeight="399.0" prefWidth="600.0" BorderPane.alignment="CENTER" />

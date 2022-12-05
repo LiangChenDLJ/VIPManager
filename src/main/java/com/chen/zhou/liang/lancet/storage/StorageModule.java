@@ -3,8 +3,10 @@ package com.chen.zhou.liang.lancet.storage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
+import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.sqlite.SQLiteDataSource;
 
@@ -14,6 +16,7 @@ public class StorageModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Authenticator.class).in(Singleton.class);
+        bind(StorageModule.class).in(Singleton.class);
     }
 
     @Provides
@@ -21,6 +24,8 @@ public class StorageModule extends AbstractModule {
     DSLContext provideDSLContext() {
         SQLiteDataSource sqliteDataSource = new SQLiteDataSource();
         sqliteDataSource.setUrl(DATABASE_URL);
-        return DSL.using(sqliteDataSource, SQLDialect.SQLITE);
+        Settings settings = new Settings();
+        settings.setExecuteLogging(true);
+        return DSL.using(sqliteDataSource, SQLDialect.SQLITE, settings);
     }
 }

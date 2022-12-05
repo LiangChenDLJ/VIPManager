@@ -10,12 +10,9 @@ import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import org.jooq.DSLContext;
-
-import java.util.Optional;
 
 import static com.chen.zhou.liang.lancet.storage.orm.Tables.CARDS;
 
@@ -71,7 +68,6 @@ public class RegisterController {
         }
         stageManager.closeRegisterStage();
     }
-
 
     private void alert () {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

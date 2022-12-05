@@ -2,25 +2,17 @@ package com.chen.zhou.liang.lancet.controller;
 
 import com.chen.zhou.liang.lancet.StageManager;
 import com.chen.zhou.liang.lancet.model.CardsVisualTable;
+import com.chen.zhou.liang.lancet.storage.DatabaseClient;
 import com.chen.zhou.liang.lancet.storage.orm.tables.records.CardsRecord;
 import com.chen.zhou.liang.lancet.utils.MessageDisplayer;
 import com.chen.zhou.liang.lancet.utils.TimeUtils;
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Result;
 
 import static com.chen.zhou.liang.lancet.storage.orm.Tables.CARDS;
 import static com.chen.zhou.liang.lancet.storage.orm.Tables.TRANSHISTORY;
@@ -29,6 +21,9 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class MainController {
+    // 每次积分更改不能超过此限制以防止误操作（误输条形码）
+    private static final float MAXIMUM_CREDIT_CHANGE = 100;
+
     @FXML
     MenuItem registerCardMenuItem;
 
@@ -63,13 +58,15 @@ public class MainController {
     TextField messageTextField;
 
     private final DSLContext dslContext;
+    private final DatabaseClient databaseClient;
     private final StageManager stageManager;
     private final MessageDisplayer messageDisplayer;
     private CardsVisualTable cardsVisualTable;
 
     @Inject
-    public MainController(DSLContext dslContext, StageManager stageManager) {
+    public MainController(DSLContext dslContext, DatabaseClient databaseClient, StageManager stageManager) {
         this.dslContext = dslContext;
+        this.databaseClient = databaseClient;
         this.stageManager = stageManager;
         this.messageDisplayer = new MessageDisplayer();
     }
@@ -88,16 +85,7 @@ public class MainController {
     }
 
     void searchCards(){
-        String searchValue = searchInput.getText();
-        final String likePhrase = "%" + searchValue + "%";
-        Condition condition = CARDS.NAME.like(likePhrase).or(CARDS.IDCARD.like(likePhrase)).or(CARDS.PHONE.like(likePhrase));
-        try {
-            int intVal = Integer.parseInt(searchValue);
-            condition.or(CARDS.ID.eq(intVal));
-        } catch (NumberFormatException ignored) {
-        }
-        Result<CardsRecord> cards =  dslContext.selectFrom(CARDS).where(condition).fetch();
-        cardsVisualTable.updateTableView(ImmutableList.copyOf(cards));
+        cardsVisualTable.updateTableView(databaseClient.QueryCardsRecord(searchInput.getText()));
     }
 
     @FXML
@@ -134,6 +122,11 @@ public class MainController {
             creditAmountToUpdate = Float.parseFloat(creditTextInput);
         } catch (NumberFormatException e) {
             messageDisplayer.displayMessage("积分格式错误，不应为： " + creditTextInput, e);
+            return;
+        }
+
+        if (creditAmountToUpdate > MAXIMUM_CREDIT_CHANGE) {
+            messageDisplayer.displayMessage("操作失败：积分变化太大：" + creditAmountToUpdate + ". 请确认输入的积分是否合法");
             return;
         }
 
