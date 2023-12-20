@@ -20,13 +20,14 @@ public abstract class VisualField<S, T> {
         this.isRequired = isRequired;
     }
 
+
     public void addRowToPane(GridPane gridPane, int index) {
         gridPane.addRow(index, new Text(displayName), textField);
     }
 
     public void fillValue(S s) throws DisplayableException {
         String textValue = textField.getText();
-        if (textValue.isEmpty()) {
+        if (textValue == null || textValue.isEmpty()) {
             if (isRequired) throw new DisplayableException("错误：" + displayName + " 不能为空");
             else return;
         }
@@ -35,6 +36,8 @@ public abstract class VisualField<S, T> {
         }
         updaterFunction.accept(s, convert(textField.getText()));
     }
+
+    public TextField getTextField() { return textField; }
 
     abstract T convert(String inputString);
 

@@ -13,6 +13,10 @@ public class StringVisualField<S> extends VisualField<S, String>{
         return inputString == null ? "" : inputString;
     }
 
+    public void setValue(String s) {
+        getTextField().setText(s);
+    }
+
     @Override
     public boolean checkStringFormat(String stringValue) {
         return !stringValue.isEmpty();

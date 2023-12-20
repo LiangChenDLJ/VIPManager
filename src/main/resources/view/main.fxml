@@ -32,6 +32,7 @@
                   <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonHandler" text="查询" />
                    <Pane HBox.hgrow="ALWAYS" />
                   <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonHandler" prefWidth="100.0" text="显示积分历史" />
+                   <Button fx:id="updateButton" mnemonicParsing="false" onAction="#updateButtonHandler" prefWidth="100.0" text="修改会员卡" />
                   <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteButtonHandler" prefWidth="100.0" text="删除会员卡" />
                </children>
                <padding>

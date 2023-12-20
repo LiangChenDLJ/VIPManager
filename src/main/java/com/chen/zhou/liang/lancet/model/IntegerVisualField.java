@@ -12,6 +12,10 @@ public class IntegerVisualField<S> extends VisualField<S, Integer>{
         return Integer.parseInt(inputString);
     }
 
+    public void setValue(Integer i) {
+        getTextField().setText(Integer.toString(i));
+    }
+
     @Override
     public boolean checkStringFormat(String stringValue) {
         return stringValue.matches("[0-9]+");

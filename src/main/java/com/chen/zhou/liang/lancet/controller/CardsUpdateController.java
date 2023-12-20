@@ -1,25 +1,27 @@
 package com.chen.zhou.liang.lancet.controller;
 
 import com.chen.zhou.liang.lancet.StageManager;
-import com.chen.zhou.liang.lancet.model.CardsRegisterPane;
-import com.chen.zhou.liang.lancet.storage.orm.tables.Cards;
+import com.chen.zhou.liang.lancet.model.CardsUpdatePane;
 import com.chen.zhou.liang.lancet.storage.orm.tables.records.CardsRecord;
 import com.chen.zhou.liang.lancet.utils.DisplayableException;
 import com.chen.zhou.liang.lancet.utils.MessageDisplayer;
 import com.chen.zhou.liang.lancet.utils.TimeUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import org.jooq.DSLContext;
 
-import static com.chen.zhou.liang.lancet.storage.orm.Tables.CARDS;
+import java.util.Optional;
+import java.io.IOException;
 
-public class RegisterController {
+import static com.chen.zhou.liang.lancet.storage.orm.Tables.CARDS;
+import static com.chen.zhou.liang.lancet.storage.orm.Tables.TRANSHISTORY;
+
+public class CardsUpdateController {
     @FXML
-    Button regButton;
+    Button updateButton;
 
     @FXML
     GridPane attributeListPane;
@@ -30,36 +32,31 @@ public class RegisterController {
     private final DSLContext dslContext;
     private final StageManager stageManager;
     private final MessageDisplayer messageDisplayer;
-    CardsRegisterPane cardsRegisterPane;
+    CardsUpdatePane cardsUpdatePane;
 
     @Inject
-    public RegisterController(DSLContext dslContext, StageManager stageManager) {
+    public CardsUpdateController(DSLContext dslContext, StageManager stageManager) {
         this.dslContext = dslContext;
         this.stageManager = stageManager;
         this.messageDisplayer = new MessageDisplayer();
     }
 
     @FXML
-    public void initialize(){
+    public void initialize(CardsRecord cardsRecord){
         messageDisplayer.initialize(messageTextField);
-        this.cardsRegisterPane = new CardsRegisterPane(attributeListPane);
+        this.cardsUpdatePane = new CardsUpdatePane(attributeListPane, cardsRecord);
     };
-
-    void validateId(CardsRecord cardsRecord) throws DisplayableException {
-        int id = cardsRecord.getId();
-        if (dslContext.selectCount().from(CARDS).where(CARDS.ID.eq(id)).fetchOne(0, int.class) > 0) {
-          throw new DisplayableException("ID "  + id + " 已存在");
-        }
-    }
 
     void validateIdcard(CardsRecord cardsRecord) throws DisplayableException {
         String idcard = cardsRecord.getIdcard();
         // 身份证可为空
         if (idcard == null || idcard.isEmpty()) {
-          return;
+            return;
         }
-        if (dslContext.selectCount().from(CARDS).where(CARDS.IDCARD.eq(idcard)).fetchOne(0, int.class) > 0) {
-           throw new DisplayableException("身份证 "  + idcard + " 已存在");
+        if (dslContext.selectCount().from(CARDS)
+                .where(CARDS.IDCARD.eq(idcard).and(CARDS.ID.notEqual(cardsRecord.getId())))
+                .fetchOne(0, int.class) > 0) {
+            throw new DisplayableException("身份证 "  + idcard + " 已存在");
         }
     }
 
@@ -69,30 +66,36 @@ public class RegisterController {
         if (phone == null || phone.isEmpty()) {
             return;
         }
-        if (dslContext.selectCount().from(CARDS).where(CARDS.PHONE.eq(phone)).fetchOne(0, int.class) > 0) {
+        if (dslContext.selectCount().from(CARDS)
+                .where(CARDS.PHONE.eq(phone).and(CARDS.ID.notEqual(cardsRecord.getId())))
+                .fetchOne(0, int.class) > 0) {
             throw new DisplayableException("手机号码 "  + phone + " 已存在");
         }
     }
 
     @FXML
-    void regButtonHandler() {
-        CardsRecord cardsRecord = dslContext.newRecord(CARDS);
+    void updateButtonHandler() {
         try {
-            cardsRegisterPane.fillCardsRecord(cardsRecord);
-            validateId(cardsRecord);
+            CardsRecord cardsRecord = new CardsRecord();
+            cardsUpdatePane.fillCardsRecord(cardsRecord);
             validateIdcard(cardsRecord);
             validatePhone(cardsRecord);
+
+            int numberOfRowsUpdated = dslContext
+                    .update(CARDS)
+                    .set(CARDS.NAME, cardsRecord.getName())
+                    .set(CARDS.IDCARD, cardsRecord.getIdcard())
+                    .set(CARDS.PHONE, cardsRecord.getPhone())
+                    .where(CARDS.ID.eq(cardsRecord.getId()))
+                    .execute();
+            assert(numberOfRowsUpdated == 1);
+            stageManager.closeCardsUpdateStage();
         } catch (DisplayableException e) {
-            messageDisplayer.displayMessage("会员卡新建失败. " + e.getMessage());
+            messageDisplayer.displayMessage("会员卡信息更新失败. " + e.getMessage());
+            return;
+        } catch (IOException e) {
+            messageDisplayer.displayMessage("[内部错误] 会员卡信息更新失败. ", e);
             return;
         }
-        cardsRecord.setRegtime(TimeUtils.getCurrentTimeAsText());
-        try {
-            cardsRecord.store();
-        } catch (RuntimeException re) {
-            re.printStackTrace();
-            messageDisplayer.displayMessage("[内部错误] 会员卡新建失败");
-        }
-        stageManager.closeRegisterStage();
     }
 }

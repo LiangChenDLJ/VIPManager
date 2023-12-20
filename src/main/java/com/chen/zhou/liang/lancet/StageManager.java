@@ -1,7 +1,9 @@
 package com.chen.zhou.liang.lancet;
 
 import com.chen.zhou.liang.lancet.controller.HistoryController;
+import com.chen.zhou.liang.lancet.controller.CardsUpdateController;
 import com.chen.zhou.liang.lancet.controller.MainController;
+import com.chen.zhou.liang.lancet.storage.orm.tables.records.CardsRecord;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class StageManager {
     private final Provider<FXMLLoader> fxmlLoaderProvider;
     private Optional<String> activeUser;
+    private MainController mainController = null;
 
     private final Stage primaryStage;
 
@@ -27,6 +30,9 @@ public class StageManager {
 
     @Nullable
     private Stage registerStage;
+
+    @Nullable
+    private Stage cardsUpdateStage;
 
     @Nullable
     private Stage changePasswordStage;
@@ -53,7 +59,10 @@ public class StageManager {
 
     public void showMainStage(String user) throws IOException {
         this.activeUser = Optional.of(user);
-        Parent root = fxmlLoaderProvider.get().load(getClass().getResourceAsStream("/view/main.fxml"));
+        FXMLLoader fxmlLoader = fxmlLoaderProvider.get();
+        Parent root = fxmlLoader.load(getClass().getResourceAsStream("/view/main.fxml"));
+        mainController = fxmlLoader.getController();
+
         Stage mainStage = new Stage();
         mainStage.setTitle("会员卡管理系统-老桥头药品零售有限公司");
         mainStage.setScene(new Scene(root));
@@ -84,10 +93,33 @@ public class StageManager {
             registerStage.setTitle("注册");
             registerStage.setScene(new Scene(root));
             registerStage.initModality(Modality.APPLICATION_MODAL);
-            registerStage.setResizable(false);
+            registerStage.setResizable(true);
             setStageIcon(registerStage);
         }
         registerStage.show();
+    }
+
+    public void showCardsUpdateStage(CardsRecord cardsRecord) throws IOException {
+        FXMLLoader fxmlLoader = fxmlLoaderProvider.get();
+        Parent root = fxmlLoader.load(getClass().getResourceAsStream("/view/update_card.fxml"));
+        CardsUpdateController cardsUpdateController = fxmlLoader.getController();
+        cardsUpdateController.initialize(cardsRecord);
+
+        cardsUpdateStage = new Stage();
+        cardsUpdateStage.setTitle("更新会员卡信息");
+        cardsUpdateStage.setScene(new Scene(root));
+        cardsUpdateStage.initModality(Modality.APPLICATION_MODAL);
+        cardsUpdateStage.setResizable(true);
+        setStageIcon(cardsUpdateStage);
+        cardsUpdateStage.show();
+    }
+
+    public void closeCardsUpdateStage() throws IOException {
+        // TODO: warning when trying to close null.
+        if (cardsUpdateStage != null) {
+            cardsUpdateStage.close();
+            mainController.searchCards();
+        }
     }
 
     public void closeRegisterStage() {

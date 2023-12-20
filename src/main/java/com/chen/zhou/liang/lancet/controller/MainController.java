@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public class MainController {
     // 每次积分更改不能超过此限制以防止误操作（误输条形码）
-    private static final float MAXIMUM_CREDIT_CHANGE = 100;
+    private static final float MAXIMUM_CREDIT_CHANGE = 10000;
 
     @FXML
     MenuItem registerCardMenuItem;
@@ -84,7 +84,8 @@ public class MainController {
         }
     }
 
-    void searchCards(){
+    public void searchCards(){
+        System.out.println("[LANCET] 更新更新");
         cardsVisualTable.updateTableView(databaseClient.QueryCardsRecord(searchInput.getText()));
     }
 
@@ -126,7 +127,7 @@ public class MainController {
         }
 
         if (creditAmountToUpdate > MAXIMUM_CREDIT_CHANGE) {
-            messageDisplayer.displayMessage("操作失败：积分变化太大：" + creditAmountToUpdate + ". 请确认输入的积分是否合法");
+            messageDisplayer.displayMessage("操作失败：积分变化太大。" + creditAmountToUpdate + ". 请确认输入的积分是否合法");
             return;
         }
 
@@ -205,6 +206,20 @@ public class MainController {
             assert(rowsUpdated == 1);
             messageDisplayer.displayMessage("删除成功");
             searchCards();
+        }
+    }
+
+    @FXML
+    void updateButtonHandler() {
+        Optional<CardsRecord> selectedCard = cardsVisualTable.getSelectedItem();
+        if (selectedCard.isEmpty()) {
+            messageDisplayer.displayMessage("错误：未选择会员卡");
+            return;
+        }
+        try {
+            stageManager.showCardsUpdateStage(selectedCard.get());
+        } catch(IOException e){
+            messageDisplayer.displayMessage("[内部错误] 启动会员卡修改界面失败", e);
         }
     }
 }

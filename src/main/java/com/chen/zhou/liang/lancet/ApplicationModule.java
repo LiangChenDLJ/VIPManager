@@ -25,7 +25,7 @@ public class ApplicationModule extends AbstractModule {
     @Provides
     FXMLLoader providesFXMLLoader(Injector injector) {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        //The new part. Give fxmlLoader a callback. Controllers will now be instantiated via the container, not FXMLLoader itself.
+        // The new part. Give fxmlLoader a callback. Controllers will now be instantiated via the container, not FXMLLoader itself.
         fxmlLoader.setControllerFactory(injector::getInstance);
         return fxmlLoader;
     }
