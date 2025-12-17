@@ -23,7 +23,12 @@ public class DatabaseClient {
         this.dslContext = dslContext;
     }
 
-    private Condition GetCardQueryCondition(String wildcardQueryString) {
+    private Condition GetCardQueryCondition(int id) {
+        Condition condition = CARDS.ID.equal(id);
+        return condition;
+    }
+
+    private Condition GetCardQueryConditionWildmatch(String wildcardQueryString) {
         final String likePhrase = "%" + wildcardQueryString + "%";
         Condition condition = CARDS.NAME.like(likePhrase).or(CARDS.IDCARD.like(likePhrase)).or(CARDS.PHONE.like(likePhrase)).or(CARDS.ID.like(likePhrase));
         try {
@@ -35,14 +40,14 @@ public class DatabaseClient {
     }
 
     public List<CardsRecord> QueryCardsRecord(String wildcardQueryString) {
-        return dslContext.selectFrom(CARDS).where(GetCardQueryCondition(wildcardQueryString)).fetch();
+        return dslContext.selectFrom(CARDS).where(GetCardQueryConditionWildmatch(wildcardQueryString)).fetch();
     }
 
     public List<TranshistoryWithCardInfo> QueryTranshistoryAndCardsRecord(
-            String wildcardQueryString,
+            int cardId,
             Optional<LocalDateTime> startDateTime,
             Optional<LocalDateTime> endDateTime) {
-        Condition condition = GetCardQueryCondition(wildcardQueryString);
+        Condition condition = GetCardQueryCondition(cardId);
         if (startDateTime.isPresent()) {
             condition = condition.and(TRANSHISTORY.TIME.ge(TimeUtils.getTimeAsText(startDateTime.get())));
         }

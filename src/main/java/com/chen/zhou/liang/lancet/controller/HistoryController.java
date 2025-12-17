@@ -92,9 +92,17 @@ public class HistoryController {
         } else {
             optionalDateTimeEnd = Optional.of(dateEnd.plusDays(1).atStartOfDay());
         }
+        String searchInputText = searchInput.getText();
+        int cardId;
+        try {
+            cardId = Integer.parseInt(searchInputText);
+        } catch (NumberFormatException ignored) {
+            messageDisplayer.displayMessage("积分历史界面仅支持按照会员卡ID搜索。错误搜索条件：" + searchInputText);
+            return;
+        }
         historyVisualTable.updateTableView(
                 databaseClient.QueryTranshistoryAndCardsRecord(
-                        searchInput.getText(), optionalDateTimeStart, optionalDateTimeEnd)
+                        cardId, optionalDateTimeStart, optionalDateTimeEnd)
         );
     }
 
